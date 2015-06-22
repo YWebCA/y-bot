@@ -1,14 +1,13 @@
 module.exports = (robot) ->
 
-  inspirations = require '../config/inspirations'
-  fs = require 'fs'
+  robot.brain.on 'loaded', ->
+    if !robot.brain.inspirations?
+      robot.brain.inspirations = []
 
+    robot.respond /inspire me/i, (res) ->
+      res.send robot.brain.inspirations[Math.floor(Math.random() * robot.brain.inspirations.length)]
 
-  robot.respond /inspire me/i, (res) ->
-    res.send inspirations[Math.floor(Math.random() * inspirations.length)]
-
-  robot.hear /(.*) #inspiration/i, (res)->
-    inspirations.push res.match[1]
-    console.log __dirname
-    fs.writeFile "./config/inspirations.json", JSON.stringify inspirations, "utf8", (err)->
-    res.send 'I\'ll remember that!'
+    robot.hear /(.*) #inspiration/i, (res)->
+      robot.brain.inspirations.push res.match[1]
+      robot.brain.emit 'save'
+      res.send 'Thanks, I\'ll remember!'
