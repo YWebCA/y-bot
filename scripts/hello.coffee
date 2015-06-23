@@ -8,4 +8,4 @@ greetings = [
 
 module.exports = (robot) ->
   robot.respond /(hello|hey|yo|howdy|hi)/i, (res) ->
-    res.send [Math.floor(Math.random() * greetings.length)]
+    res.send greetings[Math.floor(Math.random() * greetings.length)]

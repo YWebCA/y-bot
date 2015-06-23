@@ -1,11 +1,13 @@
 module.exports = (robot) ->
 
   robot.brain.on 'loaded', ->
-    if !robot.brain.inspirations?
-      robot.brain.inspirations = []
+    robot.brain.inspirations = [] unless robot.brain.inspirations
 
     robot.respond /inspire me/i, (res) ->
-      res.send robot.brain.inspirations[Math.floor(Math.random() * robot.brain.inspirations.length)]
+      if robot.brain.inspirations.length > 0
+        res.send robot.brain.inspirations[Math.floor(Math.random() * robot.brain.inspirations.length)]
+      else
+        res.send "I don't feel inspired right now. Use #inpiration to inspire me."
 
     robot.hear /(.*) #inspiration/i, (res)->
       robot.brain.inspirations.push res.match[1]
